@@ -52,3 +52,7 @@ This POC only using **Transactions** & **TransactionDetails** table, which this 
   - Warehouse Item's ID
   - Quantity
   - Price (lock current price that customer buy)
+
+### Run Test
+To run test command, please change the directory to `tests/controllers` first. The following command tests :
+-  `go test -v --run TestAddTransactionDetails`
