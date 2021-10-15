@@ -6,97 +6,97 @@ import (
 	"log"
 )
 
-var customers = []models.Customer {
+var customers = []models.Customer{
 	{
 		Nickname: "Fadlika Dita Nurjanto",
-		Email: "fadlikadn@gmail.com",
+		Email:    "fadlikadn@gmail.com",
 		Password: "password",
 	},
 	{
 		Nickname: "Fauzan Ibnu Prihadiyono",
-		Email: "fauzan@gmail.com",
+		Email:    "fauzan@gmail.com",
 		Password: "password",
 	},
 }
 
-var supplierItems = []models.SupplierItem {
+var supplierItems = []models.SupplierItem{
 	{
-		UPC: "123456",
-		BrandName: "Nike",
-		ModelName: "Basketball Shoes",
+		UPC:         "123456",
+		BrandName:   "Nike",
+		ModelName:   "Basketball Shoes",
 		Description: "Nike Basketball Shoes",
-		Price: 1000000,
-		Quantity: 20,
+		Price:       1000000,
+		Quantity:    20,
 	},
 	{
-		UPC: "987654",
-		BrandName: "Adidas",
-		ModelName: "Football Shoes",
+		UPC:         "987654",
+		BrandName:   "Adidas",
+		ModelName:   "Football Shoes",
 		Description: "Adidas Football Shoes",
-		Price: 750000,
-		Quantity: 15,
+		Price:       750000,
+		Quantity:    15,
 	},
 }
 
-var warehouseItems = []models.WarehouseItem {
+var warehouseItems = []models.WarehouseItem{
 	{
-		SKU: "123456-NIKE-BLACK-42",
-		BrandName: "Nike",
-		ModelName: "Basketball Shoes Black Size 42",
+		SKU:         "123456-NIKE-BLACK-42",
+		BrandName:   "Nike",
+		ModelName:   "Basketball Shoes Black Size 42",
 		Description: "Nike Basketball Shoes Black Size 42",
-		Price: 1000000,
-		Quantity: 5,
+		Price:       1000000,
+		Quantity:    5,
 	},
 	{
-		SKU: "123456-NIKE-BLACK-43",
-		BrandName: "Nike",
-		ModelName: "Basketball Shoes Black Size 43",
+		SKU:         "123456-NIKE-BLACK-43",
+		BrandName:   "Nike",
+		ModelName:   "Basketball Shoes Black Size 43",
 		Description: "Nike Basketball Shoes Black Size 43",
-		Price: 1000000,
-		Quantity: 5,
+		Price:       1000000,
+		Quantity:    5,
 	},
 	{
-		SKU: "123456-NIKE-BLACK-44",
-		BrandName: "Nike",
-		ModelName: "Basketball Shoes Black Size 44",
+		SKU:         "123456-NIKE-BLACK-44",
+		BrandName:   "Nike",
+		ModelName:   "Basketball Shoes Black Size 44",
 		Description: "Nike Basketball Shoes Black Size 44",
-		Price: 1000000,
-		Quantity: 5,
+		Price:       1000000,
+		Quantity:    5,
 	},
 	{
-		SKU: "123456-NIKE-BLACK-44",
-		BrandName: "Nike",
-		ModelName: "Basketball Shoes Black Size 44",
-		Description: "Nike Basketball Shoes Black Size 44",
-		Price: 1000000,
-		Quantity: 5,
+		SKU:         "123456-NIKE-BLACK-45",
+		BrandName:   "Nike",
+		ModelName:   "Basketball Shoes Black Size 45",
+		Description: "Nike Basketball Shoes Black Size 45",
+		Price:       1000000,
+		Quantity:    5,
 	},
 }
 
-var objectSchema = []models.ObjectSchema {
+var objectSchemas = []models.ObjectSchema{
 	{
 		Description: "additional information for warehouse item based on SKU variations",
-		Type: "size",
-		Value: "42",
+		Type:        "size",
+		Value:       "42",
 	},
 	{
 		Description: "additional information for warehouse item based on SKU variations",
-		Type: "size",
-		Value: "43",
+		Type:        "size",
+		Value:       "43",
 	},
 	{
 		Description: "additional information for warehouse item based on SKU variations",
-		Type: "size",
-		Value: "44",
+		Type:        "size",
+		Value:       "44",
 	},
 	{
 		Description: "additional information for warehouse item based on SKU variations",
-		Type: "size",
-		Value: "45",
+		Type:        "size",
+		Value:       "45",
 	},
 }
 
-var transactions = []models.Transaction {
+var transactions = []models.Transaction{
 	{
 		Description: "Transaction for Customer Fadli",
 	},
@@ -105,27 +105,27 @@ var transactions = []models.Transaction {
 	},
 }
 
-var transactionDetail = []models.TransactionDetail {
+var transactionDetails = []models.TransactionDetail{
 	{
 		Quantity: 2,
-		Price: 1000000,
+		Price:    1000000,
 	},
 	{
 		Quantity: 3,
-		Price: 950000,
+		Price:    950000,
 	},
 	{
 		Quantity: 1,
-		Price: 750000,
+		Price:    750000,
 	},
 	{
 		Quantity: 5,
-		Price: 500000,
+		Price:    500000,
 	},
 }
 
 func Load(db *gorm.DB) {
-	err := db.Debug().DropTableIfExists(&models.Customer{}, &models.SupplierItem{}, &models.WarehouseItem{}, &models.ObjectSchema{}, &models.Transaction{}, &models.TransactionDetail{}).Error
+	err := db.Debug().DropTableIfExists(&models.TransactionDetail{}, &models.Transaction{}, &models.ObjectSchema{}, &models.WarehouseItem{}, &models.SupplierItem{}, &models.Customer{}).Error
 	if err != nil {
 		log.Fatalf("cannot drop table: %v", err)
 	}
@@ -160,4 +160,52 @@ func Load(db *gorm.DB) {
 	if err != nil {
 		log.Fatalf("attaching foreign key table TransactionDetails warehouseItemID error: %v", err)
 	}
+
+	for i, _ := range customers {
+		err = db.Debug().Model(&models.Customer{}).Create(&customers[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed customers table: %v", err)
+		}
+	}
+
+	for i, _ := range supplierItems {
+		err = db.Debug().Model(&models.SupplierItem{}).Create(&supplierItems[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed supplierItems table: %v", err)
+		}
+	}
+
+	for i, _ := range warehouseItems {
+		warehouseItems[i].SupplierItemID = supplierItems[0].ID
+		err = db.Debug().Model(&models.WarehouseItem{}).Create(&warehouseItems[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed warehouseItems table: %v", err)
+		}
+	}
+
+	for i, _ := range objectSchemas {
+		objectSchemas[i].WarehouseItemID = warehouseItems[i].ID
+		err = db.Debug().Model(&models.ObjectSchema{}).Create(&objectSchemas[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed objectSchemas table: %v", err)
+		}
+	}
+
+	for i, _ := range transactions {
+		transactions[i].CustomerID = customers[i].ID
+		err = db.Debug().Model(&models.Transaction{}).Create(&transactions[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed transactions table: %v", err)
+		}
+	}
+
+	for i, _ := range transactionDetails {
+		transactionDetails[i].TransactionID = transactions[0].ID
+		transactionDetails[i].WarehouseItemID = warehouseItems[i].ID
+		err = db.Debug().Model(&models.TransactionDetail{}).Create(&transactionDetails[i]).Error
+		if err != nil {
+			log.Fatalf("cannot seed transactionDetails table: %v", err)
+		}
+	}
+
 }

@@ -8,12 +8,12 @@ import (
 type IDR int64
 type Amount int
 type UUID uuid.UUID
-type ID uint32
+type ID uint64
 
 // Base contains common columns for all tables.
 type Base struct {
 	//ID UUID `gorm:"type:uuid;primary_key;"`
-	ID			ID		`gorm:"primary_key;auto_increment" json:"id"`
+	ID        ID `gorm:"primary_key;auto_increment" json:"id"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt *time.Time `sql:"index"`
@@ -27,5 +27,3 @@ type Base struct {
 //	}
 //	return scope.SetColumn("ID", uuid)
 //}
-
-

@@ -10,9 +10,12 @@ The misreported can be happened because system doesn't implement SKU for the inv
 
 ## Solution
 We should use SKU (Stock Keeping Unit) to track the product's variation.
-For example shoes. A model of shoes can be splited into several variation, such as color, size. Furthermore, we can include "tanggal masuk" barang di gudang and "warehouse code" if the system already been scaled to have multiple warehouses.
+For example shoes. A model of shoes can be split into several variation, such as color, size. Furthermore, we can include "tanggal masuk" barang di gudang and "warehouse code" if the system already been scaled to have multiple warehouses.
 
-### Entity (POC, this can be expanded further to add supplier data, warehouse entry process, purchase process, etc. But the focus here is demonstrate using SKU)
+###Scope limit :
+This POC only using **Transactions** & **TransactionDetails** table, which this may be different with the real ecommerce that has more complex _transaction's_ table to handle enter items in cart, checkout, and then doing payment. This POC only validate process on **addNewTransactionDetails** process, which will compare the total amount of current stock in table WarehouseItem with total warehouseItem data that already purchased with recorded in TransactionDetails tables.
+
+### Entity (POC, this can be expanded further to add supplier data, warehouse entry process, purchase process, etc. But the focus here is demonstrating using SKU)
 - **Customer**
   - ID (UUID)
   - Name
@@ -37,17 +40,12 @@ For example shoes. A model of shoes can be splited into several variation, such 
 - **Object Schema - Warehouse (this table is used to connect Warehouse Item with Object Schema Detail - Color, size, etc)**
   - ID (UUID)
   - Warehouse Item's ID
-  - Description 
-  - ...Upcoming data can be added here
-- **Object Schema Detail**
-  - ID (UUID)
-  - Object Schema's ID
+  - Description
   - Type (ex: color, size)
   - Value (ex: blue, 43, 44, L, XL, etc, depends on the product)
 - **Transaction**
   - ID (UUID)
   - Customer ID
-  - Date
 - **Transaction Detail**
   - ID (UUID)
   - Transaction's ID
