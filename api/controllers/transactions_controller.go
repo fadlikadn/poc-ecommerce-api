@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
+	"github.com/fadlikadn/poc-ecommerce-api/api/auth"
 	"github.com/fadlikadn/poc-ecommerce-api/api/models"
 	"github.com/fadlikadn/poc-ecommerce-api/api/responses"
 	"github.com/fadlikadn/poc-ecommerce-api/api/utils/formaterror"
@@ -58,6 +60,12 @@ func (server *Server) GetTransactionByCustomer(w http.ResponseWriter, r *http.Re
 
 func (server *Server) AddTransactionDetail(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	_, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+
 	tid, err := strconv.ParseUint(vars["id"], 10, 64)
 	if err != nil {
 		responses.ERROR(w, http.StatusInternalServerError, err)
